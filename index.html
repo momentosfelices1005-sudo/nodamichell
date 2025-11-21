@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Invitación de Boda</title>
+
+  <!-- Bootstrap + Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Fuentes -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400&family=Great+Vibes&display=swap" rel="stylesheet" />
+
+  <style>
+    body {
+      background: #fbfbfb;
+      color: #665d3c;
+      font-family: 'Playfair Display', serif;
+      text-align: center;
+      margin: 0;
+      overflow-x: hidden;
+       width: 420px;
+      max-width: 100%;
+      margin: auto
+    }
+
+    #invitacion{
+       background: #f8f7f2;
+    }
+
+    /* Pantalla de inicio */
+    #pantallaBienvenida {
+      position: fixed;
+      inset: 0;
+      background: #f8f7f2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease;
+    }
+
+    #btnAbrir {
+      width: 280px;
+      max-width: 70%;
+      cursor: pointer;
+      animation: pulse 1.6s infinite ease-in-out;
+    }
+
+    .btn-secondary{
+      border-radius: 20px;
+      padding-left: 30px;
+      padding-right: 30px;
+    }
+
+    @keyframes pulse {
+      0%,100% { transform: scale(1); }
+      50% { transform: scale(1.06); }
+    }
+
+    /* Contenido */
+    #invitacion {
+      display: none;
+      opacity: 0;
+      transition: opacity 1s ease;
+      padding: 0px 0px ;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .manuscrita {
+      font-family: 'Great Vibes', cursive;
+      font-size: 1.9rem;
+      margin: 6px 0;
+    }
+
+    h1 {
+      font-size: 2.4rem;
+      font-weight: 400;
+      margin: 6px 0;
+      letter-spacing: 2px;
+    }
+
+    h2 {
+      font-family: 'Great Vibes', cursive;
+      font-size: 1.6rem;
+      margin: 0;
+    }
+
+    .fecha {
+      font-family: 'Great Vibes', cursive;
+      font-size: 1.6rem;
+      margin: 20px 0 10px;
+      position: relative;
+    }
+
+    .fecha::before,
+    .fecha::after {
+      content: "";
+      display: block;
+      width: 50px;
+      height: 2px;
+      background-color: #665d3c;
+      margin: 8px auto;
+      opacity: 0.6;
+    }
+
+    /* Imagen con degradado */
+.imagen-fade {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  max-width: 720px;
+  margin-top: 30px;
+  overflow: hidden;
+  border-radius: 0px;
+}
+
+.imagen-fade img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Degradados suaves */
+.imagen-fade::before,
+.imagen-fade::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 80px; /* un poco más alto para suavizar */
+  pointer-events: none;
+  z-index: 2;
+}
+
+.imagen-fade::before {
+  top: 0;
+  /* empieza con 70% o 60% en lugar de 100% */
+  background: linear-gradient(
+    to bottom,
+    rgba(248,247,242,0.8) 0%,
+    rgba(248,247,242,0) 100%
+  );
+}
+
+.imagen-fade::after {
+  bottom: 0;
+  background: linear-gradient(
+    to top,
+    rgba(248,247,242,0.8) 0%,
+    rgba(248,247,242,0) 100%
+  );
+}
+
+
+
+    /* ❤️ Corazón con latido */
+    #playPauseBtn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      margin-top: 10px;
+      position: relative;
+      width: 64px;
+      height: 64px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+
+    #playPauseBtn .heart {
+      font-size: 3rem;
+      color: #b8b1a3;
+      transition: transform 2.6s ease, color 2.6s ease;
+    }
+
+    #playPauseBtn.playing .heart {
+      color: rgb(161, 161, 161);
+      animation: beat 3.5s infinite ease-in-out;
+      filter: drop-shadow(0 0 8px rgba(162,123,123,0.35));
+    }
+
+    @keyframes beat {
+      0%, 100% { transform: scale(1); }
+      25% { transform: scale(1.15); }
+      50% { transform: scale(1); }
+      75% { transform: scale(1.1); }
+    }
+
+    #playPauseBtn .icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 1rem;
+      pointer-events: none;
+    }
+
+    /* Contador */
+    .countdown {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    .countdown .item {
+      text-align: center;
+      min-width: 60px;
+    }
+
+    .value {
+      font-size: 1.7rem;
+      font-weight: 600;
+    }
+
+    .label {
+      font-size: 0.9rem;
+      color: #9a958d;
+    }
+
+    footer {
+      margin-top: 10px;
+      font-style: italic;
+      color: #5a4f3a;
+    }
+
+    /* Fecha elegante */
+    .fecha-elegante {
+      text-align: center;
+      font-family: 'Playfair Display', serif;
+      color: #5c543a;
+      margin-top: 40px;
+    }
+
+    .fecha-elegante .mes {
+      font-size: 0.9rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #8a836c;
+      margin-bottom: 6px;
+    }
+
+    .fecha-elegante .contenido {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 25px;
+      position: relative;
+    }
+
+    .fecha-elegante .contenido::before,
+    .fecha-elegante .contenido::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background-color: #8a836c;
+      opacity: 0.4;
+    }
+
+    .fecha-elegante .dia-texto,
+    .fecha-elegante .hora {
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    .fecha-elegante .dia-numero {
+      font-size: 3.5rem;
+      font-weight: 500;
+      color: #665d3c;
+      line-height: 1;
+    }
+
+    .fecha-elegante .anio {
+      font-size: 1rem;
+      letter-spacing: 1px;
+      color: #8a836c;
+      margin-top: 6px;
+    }
+
+    /* 🔹 Versión más grande de la fecha elegante */
+    .fecha-elegante-grande .mes {
+      font-size: 1.2rem;
+    }
+
+    .fecha-elegante-grande .dia-texto,
+    .fecha-elegante-grande .hora {
+      font-size: 1.3rem;
+    }
+
+    .fecha-elegante-grande .dia-numero {
+      font-size: 4.9rem;
+    }
+
+    .fecha-elegante-grande .anio {
+      font-size: 1.4rem;
+    }
+
+    @media (max-width: 576px) {
+      .fecha-elegante .dia-numero {
+        font-size: 2.6rem;
+      }
+      .fecha-elegante .contenido {
+        gap: 10px;
+      }
+      
+      h1 { font-size: 1.8rem; }
+      .imagen-fade::before, .imagen-fade::after { height: 80px; }
+    }
+
+    /* 🌸 Pétalos */
+    #petalos {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      z-index: 998;
+      overflow: hidden;
+    }
+
+    .petalo {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: url('petalo.png') no-repeat center/contain;
+      opacity: 0.8;
+      top: -30px;
+      animation-name: caer;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+    }
+
+
+
+    /* Botones minimalistas corregidos */
+    .btn-minimal {
+      background-color: #e0e0e0;
+      border: none;
+      color: #333;
+      padding: 10px 22px;
+      border-radius: 50px;
+      font-size: 17px;
+      font-weight: 500;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+    .btn-minimal:hover, .btn-minimal:focus {
+      background-color: #d6d6d6;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      text-decoration: none;
+      outline: none;
+    }
+
+    /* Icono en botón ubicación */
+    .btn-minimal .bi {
+      font-size: 18px;
+      color: #666;
+    }
+
+
+
+
+    /* Imagen con degradado */
+    .imagen-fade-top {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+      max-width: 720px;
+      margin-top: 30px;
+      overflow: hidden;
+      border-radius: 0px;
+    }
+
+    .imagen-fade-top img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .imagen-fade-top::before,
+    .imagen-fade-top::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 120px;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .imagen-fade-top::before {
+      top: 0;
+      background: linear-gradient(to bottom, rgba(248,247,242,1) 0%, rgba(248,247,242,0) 100%);
+    }
+
+  
+
+
+
+
+    @keyframes caer {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0;
+      }
+      10% { opacity: 1; }
+      100% {
+        transform: translateY(110vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 🌸 Pétalos -->
+  <div id="petalos"></div>
+
+  <!-- 🕊️ Pantalla de bienvenida -->
+  <div id="pantallaBienvenida">
+    <img src="/sobre.png" id="btnAbrir" alt="Abrir invitación" />
+    <p style="margin-top: 16px;">Toca el sobre para abrir tu invitación</p>
+  </div>
+
+  <!-- 💌 Invitación -->
+  <main id="invitacion">
+
+    <div style="
+      height: 100vh; 
+      display: flex; 
+      flex-direction: column; 
+      justify-content: center; 
+      align-items: center; 
+      text-align: center;
+      background: url('fondo.png') no-repeat center center;
+      background-size: cover;
+      padding: 20px;
+    ">
+
+      <p class="manuscrita">Sé parte de nuestra historia <br> ¡Nos casamos!</p>  <br>
+
+      <h1 style="font-size: 32px;">MICHELL</h1>
+      <h2 style="font-size: 28px;">y</h2>
+      <h1 style="font-size: 32px;">JONATHAN</h1>
+
+      <img src="corazon.png" class="img-fluid" alt="Corazón" style="margin-top: 16px; ">
+
+      <br><br>
+
+      <p class="manuscrita">7 de Diciembre del 2025</p>
+
+      <!-- ❤️ Corazón con música -->
+      <button id="playPauseBtn" aria-label="Reproducir música">
+        <i class="bi bi-heart-fill heart" aria-hidden="true"></i>
+        <i class="bi bi-play-fill icon" id="iconPlayPause" aria-hidden="true"></i>
+      </button>
+      <audio id="audioPlayer" src="/music.mp3"></audio>
+    </div>
+
+    <p style="padding: 0% 8%; ">
+      ...y se unirá a su esposa, y los dos llegarán a ser un solo cuerpo”? Así que ya no son dos, sino uno solo. Por tanto, lo que Dios ha unido, que no lo separe el hombre.
+(Mateo 19:4-6)
+    </p>
+
+    <div class="imagen-fade" style="margin: 24px auto;">
+      <img src="boda.png" style="opacity: 0.85" alt="Foto de la boda" />
+    </div>
+
+    <br><br>
+    <div style="padding: 0 8%; margin-top: 8px;">
+      <h1>MICHELL y JONATHAN</h1>
+      <p>
+        Con el tiempo descubrimos que nuestros caminos no solo se encontraron, sino que avanzaban en la misma dirección. Hoy, con un amor que ha crecido con calma y certeza, hemos decidido unir nuestras vidas para siempre.
+      </p>
+
+      <img src="aro.png" class="img-fluid" alt="Anillos" style=" margin-top:14px;">
+      <p class="manuscrita" style="margin-top: 18px;">Tenemos el agrado de invitarte a <br> Nuestra boda</p>
+    </div>
+
+    <!-- Fecha elegante (más grande) -->
+    <div class="fecha-elegante fecha-elegante-grande" style="margin-top: 28px;">
+      <div class="mes" >DICIEMBRE</div>
+      <div class="contenido">
+        <span class="dia-texto">DOMINGO</span>
+        <div class="dia-numero">7</div>
+        <span class="hora">12:00 PM</span>
+      </div>
+      <div class="anio">2025</div>
+    </div>
+
+    <section style="margin-top: 26px;">
+      <img src="corazon.png" class="img-fluid" alt="Separador">
+      <div style="display:flex; flex-direction:column; align-items:center; gap:6px; margin-top:12px;">
+        <img src="iglesia.png" class="img-fluid" alt="Iglesia">
+        <div class="dia-numero" style="font-size: 2.4rem;">09:00</div>
+        <p class="manuscrita" style="font-size: 1.9rem;">Ceremonia Religiosa</p>
+        <span style="font-size: 17px; font-weight:500;">Iglesia evangélica El Belén</span>
+        <p style="font-size: 16px;">Rio Cutucu y Rio Palora</p>
+        <button class="btn btn-secondary" style="margin-top:8px;" data-bs-toggle="modal" data-bs-target="#ubicacionModal">Ver ubicación</button>
+      </div>
+    </section>
+
+    <br>
+
+    <section style="margin-top: 26px; margin-bottom:40px;">
+      <img src="recepcion.png" class="img-fluid" alt="Lugar celebración">
+      <div style="display:flex; flex-direction:column; align-items:center; gap:6px; margin-top:12px;">
+        <div class="dia-numero" style="font-size: 2.4rem;">12:00</div>
+        <p class="manuscrita" style="font-size: 1.9rem;">Recepción</p>
+        <span style="font-size: 17px; font-weight:500;">Coliseo del colegio Benigno Malo</span>
+        <p style="font-size: 16px;">Av. Solano y Aurelio Aguilar</p>
+        <button class="btn btn-secondary" style="margin-top:8px;" data-bs-toggle="modal" data-bs-target="#ubicacionModal2">Ver ubicación</button>
+      </div>
+    </section>
+
+
+
+     <div class="imagen-fade" style="margin: 24px auto;">
+      <img src="boda2.png" style="opacity: 0.85" alt="Foto de la boda" />
+    </div>
+
+
+    <br><br>
+
+    <p class="manuscrita" style="margin-top: 18px;">Prepárate para este gran día</p>
+    <p style="font-size: 16px;">Junto a ti empezamos la cuenta regresiva</p>
+
+    <div class="countdown" id="countdown" style="margin-top:16px;">
+      <div class="item"><div class="value" id="d">00</div><div class="label">DÍAS</div></div>
+      <div class="item"><div class="value" id="h">00</div><div class="label">HORAS</div></div>
+      <div class="item"><div class="value" id="m">00</div><div class="label">MIN</div></div>
+      <div class="item"><div class="value" id="s">00</div><div class="label">SEG</div></div>
+    </div>
+
+
+
+
+    <!--section style="margin-top: 26px;">
+      <img src="corazon.png" class="img-fluid" alt="Separador">
+      <div style="display:flex; flex-direction:column; align-items:center; gap:6px; margin-top:12px;">
+        <img src="vestimenta.png" class="img-fluid" alt="Iglesia">
+        <p class="manuscrita" style="font-size: 1.9rem;">Código de vestimenta</p>
+      
+         <div style="padding: 0 8%;">
+             <p style="font-size: 16px;">Queremos que ese día te veas increíble. El color blanco estará reservado especialmente para la novia, por lo que te pedimos con cariño evitar usarlo. Agradecemos tu comprensión y tu ayuda para hacer este momento aún más especial.</p>  
+         </div>
+        
+        
+      </div>
+    </!--section-->
+
+
+
+
+
+
+     <section style="margin-top: 26px;">
+      
+      <div style="display:flex; flex-direction:column; align-items:center; gap:6px; margin-top:12px;">
+        <img src="regalo.png" class="img-fluid" alt="Iglesia">
+        <p class="manuscrita" style="font-size: 1.9rem;">Regalos</p>
+
+        <div style="padding: 0 8%;">
+          <p style="font-size: 16px;">Si desean hacernos un detalle, será recibido con mucho cariño el día de la celebración. </p>
+        </div>
+      
+      
+
+        
+      </div>
+    </section>
+
+
+
+     <section style="margin-top: 26px;">
+      <img src="corazon.png" class="img-fluid" alt="Separador">
+      <div style="display:flex; flex-direction:column; align-items:center; gap:6px; margin-top:12px;">
+        <img src="confirmacion.png" class="img-fluid" alt="Iglesia">
+        <p class="manuscrita" style="font-size: 1.9rem;">Confirrma tu asistencia</p>
+      
+        <div style="padding: 0 8%;">
+          <p style="font-size: 16px;">Para organizar todo con tranquilidad y cariño, les pedimos que por favor confirmen su asistencia</strong>. Nos alegrará mucho compartir este día junto a ustedes.</p>
+        </div>
+        
+
+         <button class="btn btn-secondary" style="margin-top:8px;" data-bs-toggle="modal" data-bs-target="#confirmarModal">Confirmar asistencia</button>
+        
+      </div>
+    </section>
+
+
+    <br><br>
+
+
+
+       <div class="imagen-fade" style="margin: 40px auto  0px;">
+      <img src="boda3.png" style="opacity: 0.85" alt="Foto de la boda" />
+    </div>
+
+
+    
+
+
+
+    <div style="
+      height: 100vh; 
+      display: flex; 
+      flex-direction: column; 
+      justify-content: center; 
+      align-items: center; 
+      text-align: center;
+      background: url('fondo2.png') no-repeat center center;
+      background-size: cover;
+      padding: 20px;
+    ">
+
+
+<h1 class="manuscrita" style="font-size: 60px; margin-top: 20px;">M&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h1>
+      <h2 style="font-size: 28px;">y</h2>
+      <h1 style="font-size: 60px; " class="manuscrita">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;J</h1>
+
+
+    <p style="padding: 0% 8%;  margin-top: 40px; font-size: 16px;">
+      No imaginamos este día sin ti. Prepárate para celebrar, brindar, bailar y vivir momentos que quedarán en la memoria. Nos llena de alegría poder compartirlos contigo.
+    </p>
+
+
+
+    <p class="manuscrita">¡Te esperamos!</p>
+
+    <br><br>  
+
+
+    <img src="corazon.png" class="img-fluid" alt="Separador">
+
+
+
+
+
+    </div>
+
+
+
+
+
+  
+
+
+   
+
+
+  </main>
+
+
+  
+<!-- Modal Ubicación -->
+<div class="modal fade" id="ubicacionModal" tabindex="-1" aria-labelledby="ubicacionModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ubicacionModalLabel">Ceremonia Religiosa</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body" style="height:600px;">
+        <iframe 
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1408.8121028193477!2d-78.98904387011665!3d-2.8961436580018938!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x91cd183ba7aff9f5%3A0xfd423d2c89dd30fc!2zSWdsZXNpYSBFdmFuZ8OpbGljYSBCaWxpbmfDvGUg4oCcRWwgQmVsZW7igJ0!5e0!3m2!1ses!2sec!4v1763687977694!5m2!1ses!2sec" 
+          width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Modal Ubicación -->
+<div class="modal fade" id="ubicacionModal2" tabindex="-1" aria-labelledby="ubicacionModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ubicacionModalLabel">Recepción</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body" style="height:600px;">
+        <iframe 
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2817.6056992945573!2d-79.01004662518433!3d-2.9035727620796288!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x91cd186d4a3ebe4d%3A0xa6b03bb9113fd7ca!2sColegio%20Benigno%20Malo!5e0!3m2!1ses!2sec!4v1763688083391!5m2!1ses!2sec" 
+          width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+      <!-- Modal Confirmar Asistencia -->
+<div class="modal fade" id="confirmarModal" tabindex="-1" aria-labelledby="confirmarModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmarModalLabel">Confirma tu asistencia</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+
+        <p>Estaremos felices de que nos acompañes en este momento tan espcial en nuestras vidas. Por favor, confirma tu asistencia.</p>
+
+
+        <img src="corazon.png" class="img-fluid" alt="Corazón" style="margin-top: 16px; ">
+
+
+        <form id="formConfirmar" novalidate>
+          <div class="mb-3">
+            <label for="nombre" class="form-label" style="font-size: 17px;">Ingresa tu nombre</label>
+            <input style="font-size: 17px;" type="text" class="form-control" id="nombre" placeholder="" required>
+            <div class="invalid-feedback">
+              Por favor ingresa un nombre válido (solo letras y espacios).
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="acompanantes" class="form-label" style="font-size: 17px;">Ingresa la cantidad de personas que te acompañarán (máx. 2)</label>
+            <input type="number" class="form-control" id="acompanantes" placeholder="" min="0" max="2" style="font-size: 17px;">
+            <div class="invalid-feedback">
+              Debe ser un número entre 0 y 2.
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="btnEnviarWhatsapp" style="font-size: 17px;">
+          Enviar a WhatsApp
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+  <script>
+    const pantallaBienvenida = document.getElementById('pantallaBienvenida');
+    const btnAbrir = document.getElementById('btnAbrir');
+    const invitacion = document.getElementById('invitacion');
+    const audio = document.getElementById('audioPlayer');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const iconPlayPause = document.getElementById('iconPlayPause');
+
+    btnAbrir.addEventListener('click', () => {
+      pantallaBienvenida.style.opacity = '0';
+      setTimeout(() => {
+        pantallaBienvenida.style.display = 'none';
+        invitacion.style.display = 'block';
+        setTimeout(() => invitacion.style.opacity = '1', 50);
+        audio.play().catch(()=>{});
+        playPauseBtn.classList.add('playing');
+        iconPlayPause.classList.replace('bi-play-fill','bi-pause-fill');
+      }, 600);
+    });
+
+    playPauseBtn.addEventListener('click', () => {
+      if (audio.paused) {
+        audio.play();
+        playPauseBtn.classList.add('playing');
+        iconPlayPause.classList.replace('bi-play-fill','bi-pause-fill');
+      } else {
+        audio.pause();
+        playPauseBtn.classList.remove('playing');
+        iconPlayPause.classList.replace('bi-pause-fill','bi-play-fill');
+      }
+    });
+
+    audio.addEventListener('play', () => {
+      playPauseBtn.classList.add('playing');
+      iconPlayPause.classList.replace('bi-play-fill','bi-pause-fill');
+    });
+    audio.addEventListener('pause', () => {
+      playPauseBtn.classList.remove('playing');
+      iconPlayPause.classList.replace('bi-pause-fill','bi-play-fill');
+    });
+
+    const dEl = document.getElementById('d');
+    const hEl = document.getElementById('h');
+    const mEl = document.getElementById('m');
+    const sEl = document.getElementById('s');
+    const countdownContainer = document.getElementById('countdown');
+    const target = new Date('2025-12-07T12:00:00');
+
+    function actualizarContador() {
+      const now = new Date();
+      const diff = target - now;
+
+      if (diff <= 0) {
+        countdownContainer.innerHTML = '<div style="font-size:1.5rem;font-weight:600;color:#a67b7b;">¡El momento especial ha llegado!</div>';
+        return;
+      }
+
+      const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const m = Math.floor((diff / (1000 * 60)) % 60);
+      const s = Math.floor((diff / 1000) % 60);
+
+      dEl.textContent = d.toString().padStart(2, '0');
+      hEl.textContent = h.toString().padStart(2, '0');
+      mEl.textContent = m.toString().padStart(2, '0');
+      sEl.textContent = s.toString().padStart(2, '0');
+    }
+
+    actualizarContador();
+    setInterval(actualizarContador, 1000);
+
+    const petalos = document.getElementById('petalos');
+    const cantidad = 10;
+
+    for (let i = 0; i < cantidad; i++) {
+      const p = document.createElement('div');
+      p.className = 'petalo';
+      p.style.left = Math.random() * 100 + 'vw';
+      p.style.animationDuration = 4 + Math.random() * 5 + 's';
+      p.style.animationDelay = Math.random() * 5 + 's';
+      petalos.appendChild(p);
+    }
+  </script>
+
+
+
+<script>
+  document.getElementById('btnEnviarWhatsapp').addEventListener('click', function () {
+    const nombre = document.getElementById('nombre');
+    const acompanantes = document.getElementById('acompanantes');
+    let valido = true;
+
+    // Validar nombre
+    const nombreValido = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(nombre.value.trim());
+    if (!nombre.value.trim() || !nombreValido) {
+      nombre.classList.add('is-invalid');
+      valido = false;
+    } else {
+      nombre.classList.remove('is-invalid');
+    }
+
+    // Validar acompañantes
+    if (acompanantes.value.trim() !== '') {
+      const acompNum = parseInt(acompanantes.value.trim(), 10);
+      if (isNaN(acompNum) || acompNum < 0 || acompNum > 2) {
+        acompanantes.classList.add('is-invalid');
+        valido = false;
+      } else {
+        acompanantes.classList.remove('is-invalid');
+      }
+    } else {
+      acompanantes.classList.remove('is-invalid');
+    }
+
+    if (!valido) return;
+
+    // Construir mensaje
+    let mensaje = `Hola, felicidades por su matrimonio. Confirmo mi asistencia en este día tan especial. Mi nombre es ${nombre.value.trim()}`;
+    if (acompanantes.value.trim() && parseInt(acompanantes.value) > 0) {
+      mensaje += ` y asistiré con ${acompanantes.value} acompañante${acompanantes.value > 1 ? 's' : ''}`;
+    }else{
+      mensaje += ` y asistiré sin acompañantes`;
+    }
+
+    const url = `https://wa.me/593999263260?text=${encodeURIComponent(mensaje)}`;
+    window.open(url, '_blank');
+
+    // Cerrar modal
+    const modal = bootstrap.Modal.getInstance(document.getElementById('confirmarModal'));
+    modal.hide();
+  });
+</script>
+
+</body>
+</html>
