@@ -729,10 +729,10 @@
             </div>
           </div>
           <div class="mb-3">
-            <label for="acompanantes" class="form-label" style="font-size: 17px;">Ingresa la cantidad de personas que te acompañarán (máx. 4)</label>
+            <label for="acompanantes" class="form-label" style="font-size: 17px;">Ingresa la cantidad de personas que te acompañarán</label>
             <input type="number" class="form-control" id="acompanantes" placeholder="" min="0" max="2" style="font-size: 17px;">
             <div class="invalid-feedback">
-              El número de acompañantes debe ser entre 1 y 4.
+              El número de acompañantes debe ser mayor a 1.
             </div>
           </div>
         </form>
@@ -852,7 +852,7 @@
     // Validar acompañantes
     if (acompanantes.value.trim() !== '') {
       const acompNum = parseInt(acompanantes.value.trim(), 10);
-      if (isNaN(acompNum) || acompNum < 0 || acompNum > 4) {
+      if (isNaN(acompNum) || acompNum < 0 || acompNum > 1000000) {
         acompanantes.classList.add('is-invalid');
         valido = false;
       } else {
@@ -883,6 +883,7 @@
 
 </body>
 </html>
+
 
 
 
